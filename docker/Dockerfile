@@ -48,8 +48,7 @@ RUN chown -R ${USER_NAME} ${HOME}/.local
 USER ${USER_NAME}
 
 
-RUN git config --global user.email "iamabbhi6345@gmail.com" \
-    && git config --global user.name iamabhi6345"
+RUN git config --global user.email "iamabbhi6345@gmail.com" && git config --global user.name "iamabhi6345"
 
 RUN python3.10 -m nltk.downloader stopwords && python3.10 -m nltk.downloader punkt
 

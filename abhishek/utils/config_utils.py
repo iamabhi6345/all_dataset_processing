@@ -2,7 +2,7 @@ from typing import Any, Optional
 import yaml
 import logging
 import logging.config
-
+import os
 import hydra
 from hydra.types import TaskFunction
 from omegaconf import DictConfig, OmegaConf
@@ -33,3 +33,13 @@ def setup_logger() -> None:
     with open("./abhishek/configs/hydra/job_logging/custom.yaml", "r") as stream:
         config = yaml.load(stream, Loader=yaml.FullLoader)
     logging.config.dictConfig(config)
+    
+
+
+
+# def setup_logger():
+#     current_dir = os.path.dirname(os.path.realpath(__file__))
+#     config_path = os.path.join(current_dir, '../configs/hydra/job_logging/custom.yaml')
+#     with open(config_path, "r") as stream:
+#         config = yaml.safe_load(stream)
+#         logging.config.dictConfig(config)

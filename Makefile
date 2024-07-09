@@ -28,7 +28,7 @@ guard-%:
 
 ## Call entrypoint
 process-data: up
-	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process-data.py
 
 ## Starts jupyter lab
 notebook: up

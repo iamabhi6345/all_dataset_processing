@@ -2,13 +2,18 @@ from abhishek.config_schemas.data_processing_config_schema import DataProcessing
 from abhishek.utils.config_utils import get_config
 from abhishek.utils.gcp_utils import access_secret_version
 from abhishek.utils.data_utils import get_raw_data_with_version
-# from abhishek.config_schemas.config import data_processing_config_schema
+
+from hydra.utils import instantiate 
 
 
 @get_config(config_path="../configs", config_name="data_processing_config")
 def data_process(config: DataProcessingConfig) -> None:
+    from omegaconf import OmegaConf 
+    print(5*"\n")
+    print(OmegaConf.to_yaml(config))
+    print(5*"\n")
     # print(config)
-    # return 
+    return 
 
     github_access_token = access_secret_version(config.infrastructure.project_id,config.github_access_token_secret_id)
     get_raw_data_with_version(

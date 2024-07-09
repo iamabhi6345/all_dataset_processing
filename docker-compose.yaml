@@ -1,0 +1,29 @@
+version: "3.9"
+
+
+services:
+  app:
+    user: "${USER_ID:-1000}"
+    hostname: "${HOST_NAME:-abhishek}"
+    image: abhishek-data-processing
+    platform: linux/amd64
+    container_name: abhishek-data-processing-container
+    # environment:
+    #   - GOOGLE_APPLICATION_CREDENTIALS=./creds/cyberbullying-428016-9e4eabf320ad.json
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        USER_NAME: "${USER_NAME:-abhi}"
+        USER_ID: "${USER_ID:-1000}"
+    volumes:
+      - ./:/app/
+      - ~/.config/gcloud/:/home/${USER_NAME}/.config/gcloud
+    ports:
+      - 8888:8888
+
+ 
+    ipc: host
+    init: true
+
+

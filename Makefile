@@ -27,7 +27,7 @@ guard-%:
 	@#$(or ${$*}, $(error $* is not set))
 
 ## Call entrypoint
-process_data: up
+process-data: up
 	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
 
 ## Starts jupyter lab

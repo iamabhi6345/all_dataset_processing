@@ -32,7 +32,7 @@ class DataProcessingConfig:
     
 
 
-    # min_nrof_words: int = 2
+    min_nrof_words: int = 2
     
 
 

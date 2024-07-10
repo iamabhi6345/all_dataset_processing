@@ -8,9 +8,11 @@ from pathlib import Path
 from abhishek.utils.utils import get_logger
 import dask.dataframe as dd
 from abhishek.utils.io_utils import write_yaml_file
+from abhishek.utils.data_utils import filter_based_on_minimum_number_of_words
 from abhishek.config_schemas.data_processing.dataset_cleaners_schema import DatasetCleanerManagerConfig
 import gc
 import os
+from omegaconf import OmegaConf
 # @get_config(config_path="../configs", config_name="data_processing_config")
 # def data_process(config: DataProcessingConfig) -> None:
 #     from omegaconf import OmegaConf 
@@ -46,7 +48,7 @@ def process_raw_data(
 def process_data(config: DataProcessingConfig) -> None:
     
     # print("\n\n\nokay\n")
-    # print(config)
+    # print(OmegaConf.to_yaml(config))
     # print("\n")
     # return 
     logger = get_logger(Path(__file__).name)
@@ -71,10 +73,18 @@ def process_data(config: DataProcessingConfig) -> None:
         train_parquet_path = os.path.join(processed_data_save_dir, "train.parquet") 
         dev_parquet_path = os.path.join(processed_data_save_dir, "dev.parquet") 
         test_parquet_path = os.path.join(processed_data_save_dir, "test.parquet") 
+        
+        train_df = df[df["split"] == "train"]
+        dev_df = df[df["split"] == "dev"]
+        test_df = df[df["split"] == "test"]
 
-        df[df["split"] == "train"].to_parquet(train_parquet_path)
-        df[df["split"] == "dev"].to_parquet(dev_parquet_path)
-        df[df["split"] == "test"].to_parquet(test_parquet_path)
+        train_df = filter_based_on_minimum_number_of_words(train_df, min_nrof_words=config.min_nrof_words)
+        dev_df = filter_based_on_minimum_number_of_words(dev_df, min_nrof_words=config.min_nrof_words)
+        test_df = filter_based_on_minimum_number_of_words(test_df, min_nrof_words=config.min_nrof_words)
+
+        train_df.to_parquet(train_parquet_path)
+        dev_df.to_parquet(dev_parquet_path)
+        test_df.to_parquet(test_parquet_path)
 
         docker_info = {"docker_image": config.docker_image_name, "docker_tag": config.docker_image_tag}
         docker_info_save_path = os.path.join(processed_data_save_dir, "docker_info.yaml")

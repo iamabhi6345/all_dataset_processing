@@ -1,0 +1,14 @@
+defaults:
+  - gcp_dask_cluster_schema
+
+machine_type: n1-standard-1
+# machine_type: t2d-standard-1
+# machine_type: n2-standard-2
+# machine_type: e2-medium
+docker_image: ${docker_image_name}:${docker_image_tag}
+docker_args: >
+  --log-driver=gcplogs
+n_workers: 1
+worker_options:
+  nthreads: 1
+preemptible: false

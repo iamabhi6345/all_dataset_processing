@@ -39,7 +39,7 @@ class TwitterDatasetReaderConfig(DatasetReaderConfig):
 class DatasetReaderManagerConfig:
     _target_: str = "abhishek.data_processing.dataset_readers.DatasetReaderManager"
     dataset_readers: dict[str, DatasetReaderConfig] = MISSING
-    # repartition: bool = True
+    repartition: bool = True
     # available_memory: Optional[float] = None
 
 

@@ -1,0 +1,6 @@
+defaults:
+  - local_dask_cluster_schema
+
+n_workers: 8
+threads_per_worker: 2
+memory_limit: 8GB

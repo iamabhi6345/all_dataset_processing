@@ -19,6 +19,11 @@ DIRS_TO_VALIDATE = abhishek
 DOCKER_COMPOSE_RUN = $(DOCKER_COMPOSE_COMMAND) run --rm $(SERVICE_NAME)
 DOCKER_COMPOSE_EXEC = $(DOCKER_COMPOSE_COMMAND) exec $(SERVICE_NAME)
 
+LOCAL_DOCKER_IMAGE_NAME = abhishek-data-processing
+GCP_DOCKER_IMAGE_NAME = europe-west4-docker.pkg.dev/iamabhi45/abhishek/abhishek-data-processing
+GCP_DOCKER_IMAGE_TAG := $(strip $(shell uuidgen))
+
+
 export
 
 
@@ -26,9 +31,34 @@ export
 guard-%:
 	@#$(or ${$*}, $(error $* is not set))
 
-## Call entrypoint
-process-data: up
-	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process-data.py
+## Generate final config. CONFIG_NAME=<config_name> has to be providded. For overrides use: OVERRIDES=<overrides>
+generate-final-config: up guard-CONFIG_NAME
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/generate_final_config.py --config-name $${CONFIG_NAME} --overrides docker_image_name=$(GCP_DOCKER_IMAGE_NAME) docker_image_tag=$(GCP_DOCKER_IMAGE_TAG) $${OVERRIDES}
+
+
+## Generate final data processing config. For overrides use: OVERRIDES=<overrides>
+generate-final-data-processing-config: up
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/generate_final_config.py --config-name data_processing_config --overrides docker_image_name=$(GCP_DOCKER_IMAGE_NAME) docker_image_tag=$(GCP_DOCKER_IMAGE_TAG) $${OVERRIDES}
+
+
+## Processes raw data
+process-data: generate-final-data-processing-config push
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
+
+## Processes raw data
+local-process-data: generate-final-data-processing-config
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
+
+## test Processes raw data
+test-process-data: up
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
+
+
+## Push docker image to GCP artifact registery
+push: build
+	gcloud auth configure-docker --quiet europe-west4-docker.pkg.dev
+	docker tag $(LOCAL_DOCKER_IMAGE_NAME):latest "$(GCP_DOCKER_IMAGE_NAME):$(GCP_DOCKER_IMAGE_TAG)"
+	docker push "$(GCP_DOCKER_IMAGE_NAME):$(GCP_DOCKER_IMAGE_TAG)"
 
 ## Starts jupyter lab
 notebook: up

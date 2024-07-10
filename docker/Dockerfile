@@ -56,3 +56,5 @@ RUN python3.10 -m nltk.downloader stopwords && python3.10 -m nltk.downloader pun
 
 COPY . /app/
 CMD ["/startup-script.sh"]
+
+

@@ -8,8 +8,8 @@ services:
     image: abhishek-data-processing
     platform: linux/amd64
     container_name: abhishek-data-processing-container
-    # environment:
-    #   - GOOGLE_APPLICATION_CREDENTIALS=./creds/cyberbullying-428016-9e4eabf320ad.json
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=./creds/iamabhi45-8c25485baaf5.json
     build:
       context: .
       dockerfile: ./docker/Dockerfile

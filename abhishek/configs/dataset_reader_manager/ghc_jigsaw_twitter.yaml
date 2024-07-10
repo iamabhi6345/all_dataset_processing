@@ -4,6 +4,6 @@ defaults:
   - dataset_reader@dataset_readers.jtc: jtc
   - dataset_reader@dataset_readers.twitter: twitter
 
-# available_memory: null
+available_memory: 3.75e9
 
 

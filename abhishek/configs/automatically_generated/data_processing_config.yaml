@@ -15,19 +15,35 @@ dataset_reader_manager:
       _target_: abhishek.data_processing.dataset_readers.GHCDatasetReader
       dataset_dir: ./data/raw/ghc
       dataset_name: ghc
+      gcp_project_id: iamabhi45
+      gcp_github_access_token_secret_id: github-access-token
+      dvc_remote_repo: https://github.com/iamabhi6345/all-data-cyberbullying.git
+      github_user_name: iamabhi6345
+      version: v3
       dev_split_ratio: 0.3
     jtc:
       _target_: abhishek.data_processing.dataset_readers.JigsawToxicCommentsDatasetReader
       dataset_dir: ./data/raw/jigsaw-toxic-comments
       dataset_name: jtc
+      gcp_project_id: iamabhi45
+      gcp_github_access_token_secret_id: github-access-token
+      dvc_remote_repo: https://github.com/iamabhi6345/all-data-cyberbullying.git
+      github_user_name: iamabhi6345
+      version: v3
       dev_split_ratio: 0.03
     twitter:
       _target_: abhishek.data_processing.dataset_readers.TwitterDatasetReader
       dataset_dir: ./data/raw/twitter
       dataset_name: twitter
+      gcp_project_id: iamabhi45
+      gcp_github_access_token_secret_id: github-access-token
+      dvc_remote_repo: https://github.com/iamabhi6345/all-data-cyberbullying.git
+      github_user_name: iamabhi6345
+      version: v3
       dev_split_ratio: 0.1
       test_split_ratio: 0.125
   repartition: true
+  available_memory: 3750000000.0
 dataset_cleaner_manager:
   _target_: abhishek.data_processing.dataset_cleaners.DatasetCleanerManager
   dataset_cleaners:
@@ -58,22 +74,37 @@ dataset_cleaner_manager:
         prefix_length: 7
         count_threshold: 1
 dask_cluster:
-  _target_: dask.distributed.LocalCluster
-  n_workers: 8
-  memory_limit: 8GB
-  processes: true
-  threads_per_worker: 2
-  scheduler_port: 8786
-  silence_logs: 30
-  host: null
-  dashboard_address: :8787
-  asynchronous: false
-  blocked_handlers: null
-  service_kwargs: null
-  security: null
-  protocol: null
-  interface: null
-  worker_class: null
-processed_data_save_dir: ./data/processed
+  _target_: dask_cloudprovider.gcp.GCPCluster
+  n_workers: 1
+  projectid: iamabhi45
+  zone: europe-west4-a
+  network: default
+  network_projectid: iamabhi45
+  machine_type: n1-standard-1
+  source_image: projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2004-focal-v20220203
+  docker_image: europe-west4-docker.pkg.dev/iamabhi45/abhishek/abhishek-data-processing:a5925f8c-5ce9-4f58-96f1-b10c0193d2fe
+  docker_args: '--log-driver=gcplogs
+
+    '
+  extra_bootstrap:
+  - gcloud auth configure-docker --quiet europe-west4-docker.pkg.dev
+  ngpus: 0
+  gpu_type: null
+  filesystem_size: 50
+  disk_type: pd-standard
+  on_host_maintenance: TERMINATE
+  worker_class: dask.distributed.Nanny
+  worker_options:
+    nthreads: 1
+  env_vars: {}
+  scheduler_options: {}
+  silence_logs: null
+  asynchronous: null
+  security: true
+  preemptible: false
+  debug: false
+  instance_labels: null
+processed_data_save_dir: gs://buckets45/data/processed/{run_tag}
+run_tag: default_run
 docker_image_name: europe-west4-docker.pkg.dev/iamabhi45/abhishek/abhishek-data-processing
-docker_image_tag: 344b98e3-264d-4cb7-9321-24b7731d6ef6
+docker_image_tag: a5925f8c-5ce9-4f58-96f1-b10c0193d2fe

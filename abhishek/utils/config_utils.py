@@ -105,28 +105,26 @@ def save_config_as_pickle(config: Any, save_path: str) -> None:
         f.write(bytes_io.getvalue())
 
 
-# def custom_instantiate(config: Any) -> Any:
-#     config_as_dict = asdict(config)
-#     print(config_as_dict)
-#     if "_target_" not in config_as_dict:
-#         raise ValueError("Config does not have _target_ key")
+def custom_instantiate(config: Any) -> Any:
+    config_as_dict = asdict(config)
+    print(config_as_dict)
+    if "_target_" not in config_as_dict:
+        raise ValueError("Config does not have _target_ key")
 
-#     _target_ = config_as_dict["_target_"]
-#     _partial_ = config_as_dict.get("_partial_", False)
+    _target_ = config_as_dict["_target_"]
+    _partial_ = config_as_dict.get("_partial_", False)
 
-#     config_as_dict.pop("_target_", None)
-#     config_as_dict.pop("_partial_", None)
+    config_as_dict.pop("_target_", None)
+    config_as_dict.pop("_partial_", None)
 
-#     splitted_target = _target_.split(".")
-#     module_name, class_name = ".".join(splitted_target[:-1]), splitted_target[-1]
+    splitted_target = _target_.split(".")
+    module_name, class_name = ".".join(splitted_target[:-1]), splitted_target[-1]
 
-#     module = importlib.import_module(module_name)
-#     _class = getattr(module, class_name)
-#     if _partial_:
-#         return partial(_class, **config_as_dict)
-#     return _class(**config_as_dict)
-
-
+    module = importlib.import_module(module_name)
+    _class = getattr(module, class_name)
+    if _partial_:
+        return partial(_class, **config_as_dict)
+    return _class(**config_as_dict)
 
 
 
@@ -135,9 +133,5 @@ def save_config_as_pickle(config: Any, save_path: str) -> None:
 
 
 
-# # def setup_logger():
-# #     current_dir = os.path.dirname(os.path.realpath(__file__))
-# #     config_path = os.path.join(current_dir, '../configs/hydra/job_logging/custom.yaml')
-# #     with open(config_path, "r") as stream:
-# #         config = yaml.safe_load(stream)
-# #         logging.config.dictConfig(config)
+
+

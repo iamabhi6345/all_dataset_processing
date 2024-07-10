@@ -9,11 +9,11 @@ class DatasetReaderConfig:
     _target_: str = MISSING
     dataset_dir: str = MISSING
     dataset_name: str = MISSING
-    # gcp_project_id: str = SI("${infrastructure.project_id}")
-    # gcp_github_access_token_secret_id: str = SI("${github_access_token_secret_id}")
-    # dvc_remote_repo: str = SI("${dvc_remote_repo}")
-    # github_user_name: str = SI("${github_user_name}")
-    # version: str = SI("${version}")
+    gcp_project_id: str = SI("${infrastructure.project_id}")
+    gcp_github_access_token_secret_id: str = SI("${github_access_token_secret_id}")
+    dvc_remote_repo: str = SI("${dvc_remote_repo}")
+    github_user_name: str = SI("${github_user_name}")
+    version: str = SI("${version}")
 
 
 @dataclass
@@ -40,7 +40,7 @@ class DatasetReaderManagerConfig:
     _target_: str = "abhishek.data_processing.dataset_readers.DatasetReaderManager"
     dataset_readers: dict[str, DatasetReaderConfig] = MISSING
     repartition: bool = True
-    # available_memory: Optional[float] = None
+    available_memory: Optional[float] = None
 
 
 def setup_config() -> None:

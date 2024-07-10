@@ -97,8 +97,7 @@ def repartition_dataframe(
 def get_repo_address_with_access_token(
     gcp_project_id: str, gcp_secret_id: str, repo_address: str, user_name: str
 ) -> str:
-    # access_token = access_secret_version(gcp_project_id, gcp_secret_id)
-    access_token = "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"
+    access_token = access_secret_version(gcp_project_id, gcp_secret_id)
     repo_address = repo_address.replace("https://", "")
     return f"https://{user_name}:{access_token}@{repo_address}"
 

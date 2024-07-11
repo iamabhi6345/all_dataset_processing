@@ -41,17 +41,34 @@ generate-final-data-processing-config: up
 	$(DOCKER_COMPOSE_EXEC) python ./abhishek/generate_final_config.py --config-name data_processing_config --overrides docker_image_name=$(GCP_DOCKER_IMAGE_NAME) docker_image_tag=$(GCP_DOCKER_IMAGE_TAG) $${OVERRIDES}
 
 
+## Generate final tokenizer training config. For overrides use: OVERRIDES=<overrides>
+generate-final-tokenizer-training-config: up
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/generate_final_config.py --config-name tokenizer_training_config --overrides docker_image_name=$(GCP_DOCKER_IMAGE_NAME) docker_image_tag=$(GCP_DOCKER_IMAGE_TAG) $${OVERRIDES}
+
+
 ## Processes raw data
 process-data: generate-final-data-processing-config push
 	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
+
+## Train a tokenizer
+train-tokenizer: generate-final-tokenizer-training-config push
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/train_tokenizer.py
 
 ## Processes raw data
 local-process-data: generate-final-data-processing-config
 	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
 
+
+## Train a tokenizer locally
+local-train-tokenizer: generate-final-tokenizer-training-config
+	$(DOCKER_COMPOSE_EXEC) python ./abhishek/train_tokenizer.py
+
+
 ## test Processes raw data
 test-process-data: up
 	$(DOCKER_COMPOSE_EXEC) python ./abhishek/process_data.py
+
+
 
 
 ## Push docker image to GCP artifact registery

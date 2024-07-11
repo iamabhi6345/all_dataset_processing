@@ -1,0 +1,2 @@
+docker_image: europe-west4-docker.pkg.dev/iamabhi45/abhishek/abhishek-data-processing
+docker_tag: 055f8b4c-0862-4177-b961-ef4b5a7731d9
